@@ -1,6 +1,7 @@
 local _, addon = ...
 local L = addon.L
 
+J = "\r\n"
 -- MixIns
 AstralKeysCharacterMixin = {}
 AstralKeysListMixin = {}
@@ -64,6 +65,8 @@ function AstralKeysCharacterMixin:UpdateUnit(characterID)
 
 	if currentMapID then
 		self.keyStringValue:SetFormattedText('%d %s', currentKeyLevel, addon.GetMapName(currentMapID))
+		--XXX
+		J = J.."/keystone set dungeon:"..addon.GetMapName(currentMapID,true).." level:"..currentKeyLevel.." character:"..unit.." realm:"..realm.."\r\n\r\n"
 	else
 		self.keyStringValue:SetFormattedText('|c%s%s|r', COLOR_GRAY, L['CHARACTER_KEY_NOT_FOUND'])
 	end
@@ -944,39 +947,42 @@ end)
 local astralGuildInfo = CreateFrame('FRAME', 'astralGuildInfo', AstralKeyFrame, "BackdropTemplate")
 astralGuildInfo:Hide()
 astralGuildInfo:SetFrameLevel(8)
-astralGuildInfo:SetSize(200, 100)
+astralGuildInfo:SetSize(400, 200)
 astralGuildInfo:SetBackdrop(BACKDROPBUTTON)
 astralGuildInfo:EnableKeyboard(true)
 astralGuildInfo:SetBackdropBorderColor(.2, .2, .2, 1)
-astralGuildInfo:SetPoint('BOTTOM', UIParent, 'TOP', 0, -300)
+astralGuildInfo:SetPoint('BOTTOM', UIParent, 'TOP', 700, -700)
 
 astralGuildInfo.text = astralGuildInfo:CreateFontString(nil, 'OVERLAY', 'InterUIRegular_Normal')
 astralGuildInfo.text:SetPoint('TOP', astralGuildInfo,'TOP', 0, -10)
-astralGuildInfo.text:SetText('Visit Astral at')
+astralGuildInfo.text:SetText('Jeeves Keystone Commands')
+
+
 
 astralGuildInfo.editBox = CreateFrame('EditBox', nil, astralGuildInfo, "BackdropTemplate")
-astralGuildInfo.editBox:SetSize(180, 20)
+astralGuildInfo.editBox:SetSize(380, 100)
+astralGuildInfo.editBox:SetMultiLine(true)
 astralGuildInfo.editBox:SetPoint('TOP', astralGuildInfo.text, 'BOTTOM', 0, -10)
 
 astralGuildInfo.tex = astralGuildInfo:CreateTexture('ARTWORK')
-astralGuildInfo.tex:SetSize(198, 98)
+astralGuildInfo.tex:SetSize(398, 198)
 astralGuildInfo.tex:SetPoint('TOPLEFT', astralGuildInfo, 'TOPLEFT', 1, -1)
 astralGuildInfo.tex:SetColorTexture(0, 0, 0)
-
+--XXX
 astralGuildInfo.editBox:SetBackdrop(BACKDROPBUTTON)
 astralGuildInfo.editBox:SetBackdropBorderColor(.2, .2, .2, 1)
 astralGuildInfo.editBox:SetFontObject(InterUIRegular_Normal)
-astralGuildInfo.editBox:SetText('www.astralguild.com')
+astralGuildInfo.editBox:SetText(J) 
 astralGuildInfo.editBox:HighlightText()
 astralGuildInfo.editBox:SetScript('OnChar', function(self)
-	self:SetText('www.astralguild.com')
+	self:SetText(J)
 	self:HighlightText()
 end)
 astralGuildInfo.editBox:SetScript("OnEscapePressed", function()
 	astralGuildInfo:Hide()
 end)
 astralGuildInfo.editBox:SetScript('OnEditFocusLost', function(self)
-	self:SetText('www.astralguild.com')
+	self:SetText(J)
 	self:HighlightText()
 	end)
 local button = CreateFrame('BUTTON', nil, astralGuildInfo, "BackdropTemplate")
